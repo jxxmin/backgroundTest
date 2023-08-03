@@ -11,28 +11,35 @@ function onDeviceReady() {
         }
     );
 
-    startNextTrack();
+    playTrack();
 }
 
 let media = null;
 
-async function startNextTrack() {
-    console.log('Starting next track');
-
-    // Simulate asynchronously fetching the next track
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    console.log('Promise is resolved');
+async function playTrack() {
+    console.log('1) Start fetching next track');
+    await fetchNextTrack();
+    console.log('2) Returned from fetching next track');
 
     media = new Media(
         'file:///android_asset/www/test.mp3',
         () => {
-            console.log('Media: Success callback');
+            // Success callback after track is finished
+            console.log('3) Track is finished\n-----------------------');
             if (media) {
                 media.release();
             }
-            startNextTrack();
+
+            playTrack();
         },
     );
 
     media.play();
+}
+
+/**
+ * Simulates fetching the next track asynchronously
+ */
+async function fetchNextTrack() {
+    return new Promise(resolve => setTimeout(resolve, 5000));
 }
